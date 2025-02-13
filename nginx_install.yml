@@ -1,0 +1,57 @@
+---
+- name: Installing Nginx and cronjob and configuration
+  hosts: all #this "all" will install the package/dependencies in all the hosts irrespective of grouping 
+  become: true #this will enable sudo mode
+  
+  vars: 
+    package_name: 
+      Ubuntu: apache2 
+      Amazon: httpd
+
+  tasks:
+
+   - name: Printing Os version  
+     debug:
+      msg: "This OS is {{ansible_distribution}}"
+
+   - name: Install apache server on Al2
+     yum:
+      name: "{{package_name['Amazon']}}"
+      state: present
+     when: ansible_distribution == "Amazon"
+
+   - name: Install apache server on Ubuntu
+     apt:
+      name: "{{package_name['Ubuntu']}}"
+      state: present
+     when: ansible_distribution == "Ubuntu"
+
+   - name: Install Nginx on Al2
+     yum:
+      name: nginx
+      state: present #if the nginx is present it will not install nginx again
+     when: ansible_distribution == "Amazon" #"when" acts as if statement
+    
+   - name: Install Nginx on ubuntu
+     apt:
+      name: nginx
+      state: present 
+     when: ansible_distribution == "Ubuntu"
+
+   - name: Install Nginx on Debian
+     dnf:
+      name: nginx
+      state: present 
+     when: ansible_distribution == "Debian"
+
+   - name: Install CronJob
+     yum:
+      name: cronie
+      state: present
+     when: ansible_distribution == "Amazon"
+      
+   - name: Start Nginx
+     service:
+      name: nginx
+      state: started
+      enabled: true

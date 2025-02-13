@@ -1,0 +1,4 @@
+--- 
+- name: Provision Ec2 instance and install XX
+  hosts: localhost
+  gather_facts: no
