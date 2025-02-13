@@ -2,3 +2,8 @@
 - name: Provision Ec2 instance and install XX
   hosts: localhost
   gather_facts: no
+
+  tasks:
+    - name: Launch Ec2 instance
+      amazon.aws.ec2_instance: 
+        name: Ansible-created-instance
