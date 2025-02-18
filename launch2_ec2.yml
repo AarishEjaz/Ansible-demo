@@ -1,0 +1,9 @@
+---
+- name: Provision Ec2 instance and install package
+  hosts: localhost
+  gather_facts: no
+
+  roles: 
+    - ec2_launch
+    - webserver_config
+  

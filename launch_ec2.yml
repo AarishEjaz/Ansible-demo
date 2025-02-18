@@ -4,7 +4,7 @@
   gather_facts: no
 
   tasks:
-    - name: Adding ssh access to a security group
+    - name: Adding ssh access to a security group # configuring the security group
       amazon.aws.ec2_group:
         name: default
         description: security group fro Ec2 instances
@@ -25,7 +25,7 @@
       register: security_group
 
 
-    - name: Launch Ec2 instance
+    - name: Launch Ec2 instance #launching and providing the requirements of the ec2 instance to be launched
       amazon.aws.ec2_instance:
         name: Ansible-instance
         key_name: ansible2

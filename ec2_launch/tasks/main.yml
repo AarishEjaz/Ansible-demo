@@ -1,0 +1,51 @@
+---
+- name: Adding ssh access to a security group # configuring the security group
+  amazon.aws.ec2_group:
+    name: default
+    description: security group fro Ec2 instances
+    region: ap-south-1
+    rules:
+      - proto: tcp
+        from_port: 8080
+        to_port: 8080
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+  register: security_group
+
+- name: Launch Ec2 instance #launching and providing the requirements of the ec2 instance to be launched
+  amazon.aws.ec2_instance:
+    name: Ansible-instance
+    key_name: ansible2
+    region: ap-south-1
+    instance_type: t2.micro
+    image_id: ami-0c50b6f7dc3701ddd
+    count: 1
+    security_groups: "{{security_group.group_id}}"
+  register: ec2
+
+- name: Wait for instance 
+  wait_for: 
+    host: "{{ ec2.instances[0].public_dns_name }}"
+    port: 22
+    delay: 30
+    timeout: 300
+    state: started
+  # when: ec2.instances is defined and ec2.instances | length > 0
+
+- name: Add the ec2 instance to the inventory dynamically 
+  add_host: 
+    name: "{{ec2.instances[0].public_dns_name}}"
+    groups: dynamic_hosts
+    ansible_ssh_private_key_file: "/home/aarish/Desktop/Devops/ansible2.pem"
+    ansible_user: ec2-user 
+
+-  name: Debug dynamic inventory
+   debug:
+     var: groups['dynamic_hosts']
+# tasks file for ec2_launch

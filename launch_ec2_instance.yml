@@ -50,7 +50,7 @@
         groups: dynamic_hosts
         ansible_ssh_private_key_file: "/home/aarish/Desktop/Devops/ansible2.pem"
         ansible_user: ec2-user
-      when: ec2.instance is defined and ec2.instance | length > 0
+      # when: ec2.instance is defined and ec2.instance | length > 0
 
     - name: debug dynamic inventory
       debug:

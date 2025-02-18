@@ -1,0 +1,16 @@
+---
+- name: Copying the AWS key on my remote machine 
+  hosts: aws_linux  # Corrected 'aws_liunx' to 'aws_linux' (assuming the inventory group is named this)
+  become: yes
+  gather_facts: no
+  vars:
+    app_name: devops
+
+  vars_files:
+    - "secret.yml"  # Corrected the syntax for referencing the vault file (removed extra hyphens)
+
+  tasks:
+    - name: Copy the db password
+      copy:
+        content: "{{ db_password }}"  # Correctly referencing db_password from the vault
+        dest: "/etc/{{ app_name }}.db_pass"  # Using variable for dynamic file path
