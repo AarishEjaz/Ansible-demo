@@ -1,7 +1,7 @@
 ---
     - name: Install apache on dynamically added Ec2 instance
       become: yes 
-      yum: 
+      package: 
         name: httpd
         state: present
       # delegate_to: "{{ item }}"
